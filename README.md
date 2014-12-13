@@ -5,8 +5,7 @@ Oh My Zsh (or probably any zsh but YMMV) plugin for cf (Cloud Foundry) autocompl
 
 See the know issues below for what doesn't work.
 
-Installation 
-============
+#Installation 
 
 Drop the ```cf``` directory into your ```$ZSH/custom/plugins/``` (usually ```~/.oh-my-zsh/custom/plugins```) directory. Then add cf to the plugins line of your ```.zshrc``` file. For example here's my ```.zshrc``` plugin lines
 
@@ -15,8 +14,11 @@ Drop the ```cf``` directory into your ```$ZSH/custom/plugins/``` (usually ```~/.
     # Example format: plugins=(rails git textmate ruby lighthouse)
     # Add wisely, as too many plugins slow down shell startup.
     plugins=(git docker jsontools tmux vagrant bosh cf)
+  
+#Runtime Options
+Personally I think the short hand options to many CF commands clutter up the tab view, so I don't include them in the default output. If you want them included in the output ```export CF_ZSH_INCLUDE_SHORT=true```. The plugin will look for this variable every time so if you want to play with it you an set it on the command line. Otherwise, stick it in your ```.zshrc``` had have at it.
     
-    
+
 #Example
 
 Type ```cf <tab>``` and watch the magic happen
@@ -42,8 +44,6 @@ Type ```cf <tab>``` and watch the magic happen
 It doesn't provide extended help for commands, which would be nice. For instance when you type ```cf push <tab>``` you don't get the usage. 
 
 It doesn't know about parameters yet, so it won't prompt you for everything you need in the create-user-provided-service command.  
-
-It doesn't know about the shorthand for many cf commands (i.e. cups, l, cs, ds). 
 
 #El Problemo? 
 Open an issue or submit a PR please!
