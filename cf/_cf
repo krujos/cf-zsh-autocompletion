@@ -1,0 +1,8 @@
+#compdef cf
+cf_help=$(CF_COLOR=FALSE cf help | egrep -v '^\w' | awk '{print $1}' | tr -d ',' | egrep -v '\--|^\[|^cf$|CF_|HTTP' | egrep '^[a-z]')
+
+complete() { 
+	_arguments "1: :($cf_help)"
+}
+
+complete "$@"
