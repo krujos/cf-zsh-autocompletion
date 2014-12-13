@@ -8,7 +8,7 @@ See the know issues below for what doesn't work.
 Installation 
 ============
 
-Drop the ```cf``` directory into your ```$ZSH/custom/plugins/``` (usually ```~/.oh-my-zsh/custom/plugins```) directory. Then add bosh to the plugins line of your ```.zshrc``` file. For example here's my ```.zshrc``` plugin lines
+Drop the ```cf``` directory into your ```$ZSH/custom/plugins/``` (usually ```~/.oh-my-zsh/custom/plugins```) directory. Then add cf to the plugins line of your ```.zshrc``` file. For example here's my ```.zshrc``` plugin lines
 
     # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
     # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
