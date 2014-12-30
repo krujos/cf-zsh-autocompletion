@@ -5,16 +5,7 @@ else
    cf_help=$(CF_COLOR=FALSE cf help | egrep -v '^\w' | awk '{print $1}' | tr -d ',' | egrep -v '\--|^\[|^cf$|CF_|HTTP' | egrep '^[a-z]')
 fi
 
-find_command_flags() { 
-	case ${1} in 
-		"target")
-			opts=($(CF_COLOR=false cf target --help | grep -A2 OPTIONS: | grep -v OPTIONS | awk '{print $1}' | tr '\n' ' '))
-			compadd - $opts
-			;;
-		*)
-			;;
-	esac
-} 
+######################### Util functions ##########################
 
 # Currently unused but I've written it twice so now it stays.
 # param $1 org to compare against
@@ -28,6 +19,7 @@ is_current_org() {
 	return 1
 }
 
+####################### Compadd Functions #########################
 compadd_spaces() { 
 	#Go back through words and see if an org was specified
 	idx=${words[(i)-o]}	
@@ -44,6 +36,43 @@ compadd_spaces() {
 	compadd - $spaces #$(CF_COLOR=false cf spaces | grep -v "Getting" | grep -v "^name" )
 }
 
+#For things that print as tables that we're more or less intrested in everything after
+#a keyword in $1 (awk)
+compadd_tabley_thing_with_important_bit_in_first_position() { 
+	cmd=$1
+	search_word=$2
+	compadd - $(CF_COLOR=FALSE cf ${cmd} | awk "/${search_word}/{a=1;next;}a" | awk '{print $1}')
+}
+
+compadd_apps() { 
+	compadd_tabley_thing_with_important_bit_in_first_position "apps" "name"
+}
+
+comadd_service_instances() {
+	compadd_tabley_thing_with_important_bit_in_first_position "services" "name"
+}
+
+##################### Command discovery functions ################
+
+#$1 is the command (target, app, services, create-service etc)
+find_command_flags() { 
+	case ${1} in 
+		"target")
+			opts=($(CF_COLOR=false cf target --help | grep -A2 OPTIONS: | grep -v OPTIONS | awk '{print $1}' | tr '\n' ' '))
+			compadd - $opts
+			;;
+		"bind-service") #A positional command, APP then SERVICE-INSTANCE
+			if [[ 3 -eq ${#words} ]] ; then 
+				compadd_apps
+			elif [[ 4 -eq ${#words} ]] ; then 
+				comadd_service_instances
+			fi
+			;; #bind-service
+		*)
+			;;
+	esac
+} 
+
 #$1 is the command (target, app, services, create-service etc) 
 #$2 is the last value in words
 find_command_flag_values() { 
@@ -59,7 +88,7 @@ find_command_flag_values() {
 					compadd_spaces
 					;;
 			esac
-		;; #target
+			;; #target
 	esac
 }
 
