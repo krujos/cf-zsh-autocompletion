@@ -98,6 +98,9 @@ find_command_flag_values() {
 					;;
 			esac
 			;; #target
+		*) #For flags with no arguments. 
+			find_command_flags
+			;;
 	esac
 }
 
