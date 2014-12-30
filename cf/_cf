@@ -52,6 +52,9 @@ compadd_service_instances() {
 	compadd_tabley_thing_with_important_bit_in_first_position "services" "name"
 }
 
+compadd_orgs() { 
+	compadd_tabley_thing_with_important_bit_in_first_position "orgs" "name"
+}
 compadd_help_flags() { 
 	cmd=$words[2]
 	compadd - $(CF_COLOR=FALSE cf $cmd --help  | awk "/OPTIONS/{a=1;next;}a" | awk '{print $1}')
@@ -72,6 +75,11 @@ find_command_flags() {
 				compadd_service_instances
 			fi
 			;; #bind-service
+		"create-domain") #A positional ORG then DOMAIN
+			if [[ 3 -eq ${#words} ]] ; then 
+				compadd_orgs
+			fi
+			;;
 		"delete" | "app" ) #A positional with or without flags
 			if [[ 3 -eq ${#words} ]] ; then 
 				compadd_apps
