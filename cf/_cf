@@ -61,7 +61,7 @@ compadd_help_flags() {
 
 #$1 is the command (target, app, services, create-service etc)
 find_command_flags() { 
-	case ${1} in 
+	case $words[2] in 
 		"target")
 			compadd_help_flags
 			;;
@@ -87,10 +87,9 @@ find_command_flags() {
 #$1 is the command (target, app, services, create-service etc) 
 #$2 is the last value in words
 find_command_flag_values() { 
-	opt=$1
 	case $words[2] in 
 		"target")
-			case $opt in 
+			case $words[-2] in 
 				"-o")
 					compadd - $(CF_COLOR=FALSE cf orgs | grep -v "Getting" | grep -v "^name")
 					;;
@@ -116,9 +115,9 @@ complete() {
 			;;
 		args)
 			if [[ "$words[-2]" = '-'* ]] ; then 
-				find_command_flag_values $words[-2]
+				find_command_flag_values 
 			else
-				find_command_flags $words[2]
+				find_command_flags
 			fi
 			;;
 	esac
