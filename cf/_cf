@@ -2,11 +2,87 @@
 if [[ "${CF_ZSH_INCLUDE_SHORT}" == "true" ]] ; then 
    cf_help=$(CF_COLOR=FALSE cf help | egrep -v '^\w' |  egrep -v 'CF_|HTTP' | tr ',' '\n' | awk '{print $1}' | egrep -v '\--|^\[|^cf$' | egrep '^[a-z]')
 else 
-	 cf_help=$(CF_COLOR=FALSE cf help | egrep -v '^\w' | awk '{print $1}' | tr -d ',' | egrep -v '\--|^\[|^cf$|CF_|HTTP' | egrep '^[a-z]')
+   cf_help=$(CF_COLOR=FALSE cf help | egrep -v '^\w' | awk '{print $1}' | tr -d ',' | egrep -v '\--|^\[|^cf$|CF_|HTTP' | egrep '^[a-z]')
 fi
 
+find_command_flags() { 
+	case ${1} in 
+		"target")
+			opts=($(CF_COLOR=false cf target --help | grep -A2 OPTIONS: | grep -v OPTIONS | awk '{print $1}' | tr '\n' ' '))
+			compadd - $opts
+			;;
+		*)
+			;;
+	esac
+} 
+
+# Currently unused but I've written it twice so now it stays.
+# param $1 org to compare against
+# return 0 if it is the current, 1 otherwise.
+is_current_org() { 
+	local current_org
+	current_org=$(CF_COLOR=false cf target  | grep Org | awk '{print $2}')
+	if [[ "$current_org" == "$1" ]] ; then 
+		return 0
+	fi
+	return 1
+}
+
+compadd_spaces() { 
+	#Go back through words and see if an org was specified
+	idx=${words[(i)-o]}	
+	local spaces
+	if [[ $idx < ${#words} ]] ; then 
+		(( i = $idx + 1 ))
+		spaces=($(CF_CLOLOR=FALSE cf org $words[$i] | grep spaces: | sed -e 's/spaces://' | tr -d ','))
+	else
+    	#If no org, the user proabably meant the current space, if they add it later
+	    #this will make the wrong suggestions. We should proabably force the first 
+	    #argument to be an org
+		spaces=($(CF_COLOR=FALSE cf spaces | grep -v "Getting" | grep -v "^name" ))
+	fi 
+	compadd - $spaces #$(CF_COLOR=false cf spaces | grep -v "Getting" | grep -v "^name" )
+}
+
+#$1 is the command (target, app, services, create-service etc) 
+#$2 is the last value in words
+find_command_flag_values() { 
+	cmd=$1
+	opt=$2
+	case $cmd in 
+		"target")
+			case $opt in 
+				"-o")
+					compadd - $(CF_COLOR=false cf orgs | grep -v "Getting" | grep -v "^name")
+					;;
+				"-s")
+					compadd_spaces
+					;;
+			esac
+		;; #target
+	esac
+}
+
 complete() { 
-	_arguments "1: :($cf_help)"
+	local curcontext="$curcontext" state line
+	typeset -A opt_args
+
+	_arguments \
+		'1: :->first' \
+		'*: :->args'
+	
+	case $state in
+		first) 
+			_arguments "1: :($cf_help)"
+			;;
+		args)
+			if [[ "$words[-2]" = '-'* ]] ; then 
+				find_command_flag_values $words[2] $words[-2]
+			else
+				find_command_flags $words[2]
+			fi
+			;;
+	esac
 }
 
 complete "$@"
