@@ -48,8 +48,13 @@ compadd_apps() {
 	compadd_tabley_thing_with_important_bit_in_first_position "apps" "name"
 }
 
-comadd_service_instances() {
+compadd_service_instances() {
 	compadd_tabley_thing_with_important_bit_in_first_position "services" "name"
+}
+
+compadd_help_flags() { 
+	cmd=$words[2]
+	compadd - $(CF_COLOR=FALSE cf $cmd --help  | awk "/OPTIONS/{a=1;next;}a" | awk '{print $1}')
 }
 
 ##################### Command discovery functions ################
@@ -58,16 +63,22 @@ comadd_service_instances() {
 find_command_flags() { 
 	case ${1} in 
 		"target")
-			opts=($(CF_COLOR=FALSE cf target --help  | awk "/OPTIONS/{a=1;next;}a" | awk '{print $1}'))
-			compadd - $opts
+			compadd_help_flags
 			;;
 		"bind-service") #A positional command, APP then SERVICE-INSTANCE
 			if [[ 3 -eq ${#words} ]] ; then 
 				compadd_apps
 			elif [[ 4 -eq ${#words} ]] ; then 
-				comadd_service_instances
+				compadd_service_instances
 			fi
 			;; #bind-service
+		"delete") #A positional with flags
+			if [[ 3 -eq ${#words} ]] ; then 
+				compadd_apps
+			else
+				compadd_help_flags 
+			fi
+			;;
 		*)
 			;;
 	esac
@@ -76,13 +87,12 @@ find_command_flags() {
 #$1 is the command (target, app, services, create-service etc) 
 #$2 is the last value in words
 find_command_flag_values() { 
-	cmd=$1
-	opt=$2
-	case $cmd in 
+	opt=$1
+	case $words[2] in 
 		"target")
 			case $opt in 
 				"-o")
-					compadd - $(CF_COLOR=false cf orgs | grep -v "Getting" | grep -v "^name")
+					compadd - $(CF_COLOR=FALSE cf orgs | grep -v "Getting" | grep -v "^name")
 					;;
 				"-s")
 					compadd_spaces
@@ -106,7 +116,7 @@ complete() {
 			;;
 		args)
 			if [[ "$words[-2]" = '-'* ]] ; then 
-				find_command_flag_values $words[2] $words[-2]
+				find_command_flag_values $words[-2]
 			else
 				find_command_flags $words[2]
 			fi
