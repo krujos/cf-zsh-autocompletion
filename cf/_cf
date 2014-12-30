@@ -72,7 +72,7 @@ find_command_flags() {
 				compadd_service_instances
 			fi
 			;; #bind-service
-		"delete" | "app" ) #A positional with flags
+		"delete" | "app" ) #A positional with or without flags
 			if [[ 3 -eq ${#words} ]] ; then 
 				compadd_apps
 			else
