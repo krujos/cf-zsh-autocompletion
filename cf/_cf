@@ -58,7 +58,7 @@ comadd_service_instances() {
 find_command_flags() { 
 	case ${1} in 
 		"target")
-			opts=($(CF_COLOR=false cf target --help | grep -A2 OPTIONS: | grep -v OPTIONS | awk '{print $1}' | tr '\n' ' '))
+			opts=($(CF_COLOR=FALSE cf target --help  | awk "/OPTIONS/{a=1;next;}a" | awk '{print $1}'))
 			compadd - $opts
 			;;
 		"bind-service") #A positional command, APP then SERVICE-INSTANCE
