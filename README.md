@@ -43,7 +43,7 @@ Type ```cf <tab>``` and watch the magic happen
 #Known Issues
 It doesn't provide extended help for commands, which would be nice. For instance when you type ```cf push <tab>``` you don't get the usage. 
 
-It doesn't know about parameters yet, so it won't prompt you for everything you need in the create-user-provided-service command.  
+It doesn't know about parameters for every command yet. It will prompt with spaces, orgs and apps for some commands. 
 
 #El Problemo? 
 Open an issue or submit a PR please!
