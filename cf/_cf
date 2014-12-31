@@ -65,6 +65,31 @@ compadd_help_flags() {
 	compadd - $(CF_COLOR=FALSE cf $cmd --help  | awk "/OPTIONS/{a=1;next;}a" | awk '{print $1}')
 }
 
+command_complete() { 
+	compadd -x "Command is complete. Press <ENTER>"
+} 
+
+##################### Specific command functions ################
+create_route() { 
+	case ${#words} in
+		3)
+			compadd_spaces
+			;;
+		4)
+			compadd_domains
+			;;
+		5) 
+			compadd_help_flags
+			;;
+		6)
+			compadd -x "Enter hostname"
+			;;
+		7)
+			command_complete
+			;;
+	esac
+}
+
 ##################### Command discovery functions ################
 
 #$1 is the command (target, app, services, create-service etc)
@@ -93,16 +118,7 @@ find_command_flags() {
 			fi
 			;;
 		"create-route") #A SPACE then DOMAIN with possible flags
-			if [[ 3 -eq ${#words} ]] ; then 
-				compadd_spaces
-			elif [[ 4 -eq ${#words} ]] ; then 
-				compadd_domains
-			elif [[ 5 -eq ${#words} ]] ; then
-				compadd_help_flags
-			else 
-				compadd -x "Enter hostname"
-			fi
-			
+			create_route
 			;;
 		*)
 			;;
