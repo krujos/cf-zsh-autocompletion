@@ -124,7 +124,7 @@ find_command_flags() {
 			case ${#words} in
 				3) compadd_message "Enter the name for the security group";;
 				4) _files;;
-				5) command_complete;;
+				*) command_complete;;
 			esac
 			;;
 		"create-service-broker") #Bunch of strings
@@ -133,7 +133,13 @@ find_command_flags() {
 				4) compadd_message "Enter the username for the service broker";;
 				5) compadd_message "Enter the password for the service broker";;
 				6) compadd_message "Enter the URL for the service broker";;
-				7) command_complete;;
+				*) command_complete;;
+			esac
+			;;
+		"create-shared-domain") #One string for domain
+			case ${#words} in 
+				3) compadd_message "Enter the domain";;
+				*) command_complete;;
 			esac
 			;;
 		*)
