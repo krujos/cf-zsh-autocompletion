@@ -65,8 +65,12 @@ compadd_help_flags() {
 	compadd - $(CF_COLOR=FALSE cf $cmd --help  | awk "/OPTIONS/{a=1;next;}a" | awk '{print $1}')
 }
 
+compadd_message() { 
+	compadd -x $1
+}
+
 command_complete() { 
-	compadd -x "Command is complete. Press <ENTER>"
+	compadd_message "Command is complete. Press <ENTER>"
 } 
 
 ##################### Specific command functions ################
@@ -100,9 +104,11 @@ find_command_flags() {
 			fi
 			;; #bind-service
 		"create-domain") #A positional ORG then DOMAIN
-			if [[ 3 -eq ${#words} ]] ; then 
-				compadd_orgs
-			fi
+			case ${#words} in 
+				3) compadd_orgs;;
+				4) compadd_message "Enter the domain name to add.";;
+				*) command_complete
+			esac
 			;;
 		"delete" | "app" ) #A positional with or without flags
 			if [[ 3 -eq ${#words} ]] ; then 
