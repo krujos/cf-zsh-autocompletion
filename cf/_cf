@@ -120,6 +120,13 @@ find_command_flags() {
 		"create-route") #A SPACE then DOMAIN with possible flags
 			create_route
 			;;
+		"create-security-group") #A name then a path to a file. 
+			case ${#words} in
+				3) compadd_message "Enter the name for the security group";;
+				4) _files;;
+				5) command_complete;;
+			esac
+			;;
 		*)
 			;;
 	esac
