@@ -86,7 +86,11 @@ create_route() {
 find_command_flags() { 
 	case $words[2] in 
 		"target")
-			compadd_help_flags
+			case $words[-2] in 
+				-o) compadd_orgs;;
+				-s) compadd_spaces;;
+				*) compadd_help_flags;;
+			esac
 			;;
 		"bind-service") #A positional command, APP then SERVICE-INSTANCE
 			if [[ 3 -eq ${#words} ]] ; then 
@@ -115,22 +119,6 @@ find_command_flags() {
 	esac
 } 
 
-#$1 is the command (target, app, services, create-service etc) 
-#$2 is the last value in words
-find_command_flag_values() { 
-	case $words[2] in 
-		"target")
-			case $words[-2] in 
-				"-o") compadd_orgs;;
-				"-s") compadd_spaces;;
-			esac
-			;; #target
-		*) #For flags with no arguments. 
-			find_command_flags
-			;;
-	esac
-}
-
 complete() { 
 	local curcontext="$curcontext" state line
 	typeset -A opt_args
@@ -144,11 +132,7 @@ complete() {
 			_arguments "1: :($cf_help)"
 			;;
 		args)
-			if [[ "$words[-2]" = '-'* ]] ; then 
-				find_command_flag_values 
-			else
-				find_command_flags
-			fi
+			find_command_flags
 			;;
 	esac
 }
