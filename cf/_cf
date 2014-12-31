@@ -72,21 +72,11 @@ command_complete() {
 ##################### Specific command functions ################
 create_route() { 
 	case ${#words} in
-		3)
-			compadd_spaces
-			;;
-		4)
-			compadd_domains
-			;;
-		5) 
-			compadd_help_flags
-			;;
-		6)
-			compadd -x "Enter hostname"
-			;;
-		7)
-			command_complete
-			;;
+		3) compadd_spaces;;
+		4) compadd_domains;;
+		5) compadd_help_flags;;
+		6) compadd -x "Enter hostname";;
+		7) command_complete;;
 	esac
 }
 
@@ -131,12 +121,8 @@ find_command_flag_values() {
 	case $words[2] in 
 		"target")
 			case $words[-2] in 
-				"-o")
-					compadd - $(CF_COLOR=FALSE cf orgs | grep -v "Getting" | grep -v "^name")
-					;;
-				"-s")
-					compadd_spaces
-					;;
+				"-o") compadd_orgs;;
+				"-s") compadd_spaces;;
 			esac
 			;; #target
 		*) #For flags with no arguments. 
