@@ -55,6 +55,11 @@ compadd_service_instances() {
 compadd_orgs() { 
 	compadd_tabley_thing_with_important_bit_in_first_position "orgs" "name"
 }
+
+compadd_domains() { 
+	compadd_tabley_thing_with_important_bit_in_first_position "domains" "name"
+} 
+
 compadd_help_flags() { 
 	cmd=$words[2]
 	compadd - $(CF_COLOR=FALSE cf $cmd --help  | awk "/OPTIONS/{a=1;next;}a" | awk '{print $1}')
@@ -86,6 +91,18 @@ find_command_flags() {
 			else
 				compadd_help_flags 
 			fi
+			;;
+		"create-route") #A SPACE then DOMAIN with possible flags
+			if [[ 3 -eq ${#words} ]] ; then 
+				compadd_spaces
+			elif [[ 4 -eq ${#words} ]] ; then 
+				compadd_domains
+			elif [[ 5 -eq ${#words} ]] ; then
+				compadd_help_flags
+			else 
+				compadd -x "Enter hostname"
+			fi
+			
 			;;
 		*)
 			;;
