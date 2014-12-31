@@ -127,6 +127,15 @@ find_command_flags() {
 				5) command_complete;;
 			esac
 			;;
+		"create-service-broker") #Bunch of strings
+			case ${#words} in 
+				3) compadd_message "Enter the name for the service broker";;
+				4) compadd_message "Enter the username for the service broker";;
+				5) compadd_message "Enter the password for the service broker";;
+				6) compadd_message "Enter the URL for the service broker";;
+				7) command_complete;;
+			esac
+			;;
 		*)
 			;;
 	esac
