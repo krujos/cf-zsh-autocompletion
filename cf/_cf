@@ -145,8 +145,8 @@ find_command_flags() {
 		"create-space") #LAST A-Z
 			case ${#words} in
 				3) compadd_message "Enter the name of the space";;
-				3) compadd_help_flags;;
-				4) compadd_orgs;;
+				4) compadd_help_flags;;
+				5) compadd_orgs;;
 				*) command_complete;;
 			esac
 			;;
