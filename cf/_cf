@@ -97,11 +97,11 @@ find_command_flags() {
 			esac
 			;;
 		"bind-service") #A positional command, APP then SERVICE-INSTANCE
-			if [[ 3 -eq ${#words} ]] ; then 
-				compadd_apps
-			elif [[ 4 -eq ${#words} ]] ; then 
-				compadd_service_instances
-			fi
+			case ${#words} in 
+				3) compadd_apps;; 
+				4) compadd_service_instances;;
+				5) command_complete;;
+			esac
 			;; #bind-service
 		"create-domain") #A positional ORG then DOMAIN
 			case ${#words} in 
