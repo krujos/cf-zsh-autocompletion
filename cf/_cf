@@ -73,6 +73,11 @@ command_complete() {
 	compadd_message "Command is complete. Press <ENTER>"
 } 
 
+compadd_positional() { 
+	positional=$(CF_COLOR=false cf $words[2] --help | grep -A1 USAGE | grep -v USAGE | awk "{print \$${#words}}")
+	compadd_message "Enter value for $positional"
+}
+
 ##################### Specific command functions ################
 create_route() { 
 	case ${#words} in
@@ -106,45 +111,41 @@ find_command_flags() {
 		"create-domain") #A positional ORG then DOMAIN
 			case ${#words} in 
 				3) compadd_orgs;;
-				4) compadd_message "Enter the domain name to add.";;
+				4) compadd_positional;;
 				*) command_complete
 			esac
 			;;
 		"delete" | "app" ) #A positional with or without flags
-			if [[ 3 -eq ${#words} ]] ; then 
-				compadd_apps
-			else
-				compadd_help_flags 
-			fi
+			case ${#words} in
+				3) compadd_apps;;
+				*) compadd_help_flags;;
+			esac
 			;;
 		"create-route") #A SPACE then DOMAIN with possible flags
 			create_route
 			;;
 		"create-security-group") #A name then a path to a file. 
 			case ${#words} in
-				3) compadd_message "Enter the name for the security group";;
+				3) compadd_positional;;
 				4) _files;;
 				*) command_complete;;
 			esac
 			;;
 		"create-service-broker") #Bunch of strings
 			case ${#words} in 
-				3) compadd_message "Enter the name for the service broker";;
-				4) compadd_message "Enter the username for the service broker";;
-				5) compadd_message "Enter the password for the service broker";;
-				6) compadd_message "Enter the URL for the service broker";;
+				3 | 4 | 5 | 6) compadd_positional;;
 				*) command_complete;;
 			esac
 			;;
 		"create-shared-domain") #One string for domain
 			case ${#words} in 
-				3) compadd_message "Enter the domain";;
+				3) compadd_positional;;
 				*) command_complete;;
 			esac
 			;;
 		"create-space") #LAST A-Z
 			case ${#words} in
-				3) compadd_message "Enter the name of the space";;
+				3) compadd_positional;;
 				4) compadd_help_flags;;
 				5) compadd_orgs;;
 				*) command_complete;;
