@@ -60,6 +60,10 @@ compadd_domains() {
 	compadd_tabley_thing_with_important_bit_in_first_position "domains" "name"
 } 
 
+compadd_buildpacks() { 
+	compadd_tabley_thing_with_important_bit_in_first_position "buildpacks" "position" 
+} 
+
 compadd_help_flags() { 
 	cmd=$words[2]
 	compadd - $(CF_COLOR=FALSE cf $cmd --help  | awk "/OPTIONS/{a=1;next;}a" | awk '{print $1}')
@@ -131,6 +135,13 @@ find_command_flags() {
 				*) command_complete;;
 			esac
 			;;
+		#TODO Combine the multiple prompt functions...
+		"create-user") #Two strings. 
+			case ${#words} in 
+				3 | 4) compadd_positional;;
+				*) command_complete;;
+			esac
+			;;
 		"create-service-broker") #Bunch of strings
 			case ${#words} in 
 				3 | 4 | 5 | 6) compadd_positional;;
@@ -143,11 +154,18 @@ find_command_flags() {
 				*) command_complete;;
 			esac
 			;;
-		"create-space") #LAST A-Z
+		"create-space")
 			case ${#words} in
 				3) compadd_positional;;
 				4) compadd_help_flags;;
 				5) compadd_orgs;;
+				*) command_complete;;
+			esac
+			;;
+		"delete-buildpack")
+			case ${#words} in
+				3) compadd_buildpacks;;
+				4) compadd_help_flags;;
 				*) command_complete;;
 			esac
 			;;
