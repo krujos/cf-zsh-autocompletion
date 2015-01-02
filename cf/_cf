@@ -82,6 +82,15 @@ compadd_positional() {
 	compadd_message "Enter value for $positional"
 }
 
+compadd_quotas() { 
+	compadd_tabley_thing_with_important_bit_in_first_position "quotas" "name"
+}
+
+compadd_named_positional() { 
+	positional=$(CF_COLOR=false cf $words[2] --help | grep -A1 USAGE | grep -v USAGE | awk '{print $3 }')
+	eval compadd_${positional:l}s
+}
+
 ##################### Specific command functions ################
 create_route() { 
 	case ${#words} in
@@ -186,6 +195,13 @@ find_command_flags() {
 		"delete-orphaned-routes")
 			case ${#words} in
 				3) compadd_help_flags;;
+				*) command_complete;;
+			esac
+			;;
+		"delete-quota") 
+			case ${#words} in
+				3) compadd_named_positional;;
+				4) compadd_help_flags;;
 				*) command_complete;;
 			esac
 			;;
