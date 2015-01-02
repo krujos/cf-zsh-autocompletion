@@ -169,6 +169,13 @@ find_command_flags() {
 				*) command_complete;;
 			esac
 			;;
+		"delete-domain")
+			case ${#words} in 
+				3) compadd_domains;;
+				4) compadd_help_flags;;
+				*) command_complete;;
+			esac
+			;;
 		*)
 			;;
 	esac
