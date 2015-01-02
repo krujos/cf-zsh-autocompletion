@@ -183,6 +183,12 @@ find_command_flags() {
 				*) command_complete;;
 			esac
 			;;
+		"delete-orphaned-routes")
+			case ${#words} in
+				3) compadd_help_flags;;
+				*) command_complete;;
+			esac
+			;;
 		*)
 			;;
 	esac
