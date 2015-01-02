@@ -64,6 +64,10 @@ compadd_buildpacks() {
 	compadd_tabley_thing_with_important_bit_in_first_position "buildpacks" "position" 
 } 
 
+compadd_quotas() { 
+	compadd_tabley_thing_with_important_bit_in_first_position "quotas" "name"
+}
+
 compadd_help_flags() { 
 	cmd=$words[2]
 	compadd - $(CF_COLOR=FALSE cf $cmd --help  | awk "/OPTIONS/{a=1;next;}a" | awk '{print $1}')
@@ -80,10 +84,6 @@ command_complete() {
 compadd_positional() { 
 	positional=$(CF_COLOR=false cf $words[2] --help | grep -A1 USAGE | grep -v USAGE | awk "{print \$${#words}}")
 	compadd_message "Enter value for $positional"
-}
-
-compadd_quotas() { 
-	compadd_tabley_thing_with_important_bit_in_first_position "quotas" "name"
 }
 
 compadd_named_positional() { 
@@ -171,34 +171,13 @@ find_command_flags() {
 				*) command_complete;;
 			esac
 			;;
-		"delete-buildpack")
-			case ${#words} in
-				3) compadd_buildpacks;;
-				4) compadd_help_flags;;
-				*) command_complete;;
-			esac
-			;;
-		"delete-domain")
-			case ${#words} in 
-				3) compadd_domains;;
-				4) compadd_help_flags;;
-				*) command_complete;;
-			esac
-			;;
-		"delete-org")
-			case ${#words} in
-				3) compadd_orgs;;
-				4) compadd_help_flags;;
-				*) command_complete;;
-			esac
-			;;
 		"delete-orphaned-routes")
 			case ${#words} in
 				3) compadd_help_flags;;
 				*) command_complete;;
 			esac
 			;;
-		"delete-quota") 
+		delete-quota | delete-org | delete-domain | delete-buildpack) 
 			case ${#words} in
 				3) compadd_named_positional;;
 				4) compadd_help_flags;;
