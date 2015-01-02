@@ -177,7 +177,7 @@ find_command_flags() {
 				*) command_complete;;
 			esac
 			;;
-		delete-quota | delete-org | delete-domain | delete-buildpack) 
+		delete-*)
 			case ${#words} in
 				3) compadd_named_positional;;
 				4) compadd_help_flags;;
