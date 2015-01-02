@@ -177,6 +177,12 @@ find_command_flags() {
 				*) command_complete;;
 			esac
 			;;
+		"delete-service-auth-token")
+			#V1 command. ignored... 
+			;;
+		"delete-space-quota" | delete-user) 
+			#ignored for now
+			;;
 		delete-*)
 			case ${#words} in
 				3) compadd_named_positional;;
