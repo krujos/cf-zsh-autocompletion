@@ -5,6 +5,9 @@ Oh My Zsh (or probably any zsh but YMMV) plugin for cf (Cloud Foundry) autocompl
 
 See the know issues below for what doesn't work.
 
+#Future
+Now that the CLI supports plugins, I'm considering abandoning this project in favor of a true CLI plugin. 
+
 #Installation 
 
 Drop the ```cf``` directory into your ```$ZSH/custom/plugins/``` (usually ```~/.oh-my-zsh/custom/plugins```) directory. Then add cf to the plugins line of your ```.zshrc``` file. For example here's my ```.zshrc``` plugin lines
