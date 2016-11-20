@@ -69,10 +69,12 @@ compadd_domains() {
 compadd_buildpacks() { 
 	compadd_tabley_thing_with_important_bit_in_first_position "buildpacks" "position" 
 } 
-
+compadd_service_keys() {
+	compadd - $(CF_COLOR=FALSE cf service-keys ${words[3]} | awk "/name/{a=1;next;}a" | awk '{print $1}')
+} 
 compadd_help_flags() { 
 	cmd=$words[2]
-	compadd - $(CF_COLOR=FALSE cf $cmd --help  | awk "/OPTIONS/{a=1;next;}a" | awk '{print $1}')
+	compadd - $(CF_COLOR=FALSE cf $cmd --help | awk "/OPTIONS/{a=1;next;}a" | awk '{print $1}')
 }
 
 compadd_message() { 
@@ -104,14 +106,47 @@ create_route() {
 #$1 is the command (target, app, services, create-service etc)
 find_command_flags() { 
 	case $words[2] in 
-		"target")
+		"target" | "t")
 			case $words[-2] in 
 				-o) compadd_orgs;;
 				-s) compadd_spaces;;
 				*) compadd_help_flags;;
 			esac
 			;;
-		"bind-service") #A positional command, APP then SERVICE-INSTANCE
+		"service-keys") #A positional command, APP then SERVICE-INSTANCE
+			case ${#words} in 
+				3) compadd_service_instances;;
+				4) command_complete;;
+			esac
+			;; #service-keys
+		"create-service-key") #A positional command, APP then SERVICE-INSTANCE
+			case ${#words} in 
+				3) compadd_service_instances;;
+				*) compadd_help_flags;;
+			esac
+			;; #create-service-key
+		"service-key") #A positional command, APP then SERVICE-INSTANCE
+			case ${#words} in 
+				3) compadd_service_instances;;
+				4) compadd_service_keys;;
+				5) command_complete;;
+			esac
+			;; #service-key
+		"delete-service-key") #A positional command, APP then SERVICE-INSTANCE
+			case ${#words} in 
+				3) compadd_service_instances;;
+				4) compadd_service_keys;;
+				5) command_complete;;
+			esac
+			;; #delete-service-key
+		"unbind-service" | "us") #A positional command, APP then SERVICE-INSTANCE
+			case ${#words} in 
+				3) compadd_apps;; 
+				4) compadd_service_instances;;
+				5) command_complete;;
+			esac
+			;; #unbind-service
+		"bind-service" | "bs") #A positional command, APP then SERVICE-INSTANCE
 			case ${#words} in 
 				3) compadd_apps;; 
 				4) compadd_service_instances;;
