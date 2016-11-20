@@ -1,8 +1,14 @@
 #compdef cf
+help_arg=""
+cf_version=$(cf --version | awk '{print $3}' | sed -e 's/\.[0-9]\+.*//' | sed 's/\.//g')
+if [[ "$cf_version" -ge "622" ]] ; then
+	help_arg="-a"
+fi
+
 if [[ "${CF_ZSH_INCLUDE_SHORT}" == "true" ]] ; then 
-   cf_help=$(CF_COLOR=FALSE cf help | egrep -v '^\w' |  egrep -v 'CF_|HTTP' | tr ',' '\n' | awk '{print $1}' | egrep -v '\--|^\[|^cf$' | egrep '^[a-z]')
+   cf_help=$(CF_COLOR=FALSE cf help $help_arg | egrep -v '^\w' |  egrep -v 'CF_|HTTP' | tr ',' '\n' | awk '{print $1}' | egrep -v '\--|^\[|^cf$' | egrep '^[a-z]')
 else 
-   cf_help=$(CF_COLOR=FALSE cf help | egrep -v '^\w' | awk '{print $1}' | tr -d ',' | egrep -v '\--|^\[|^cf$|CF_|HTTP' | egrep '^[a-z]')
+   cf_help=$(CF_COLOR=FALSE cf help $help_arg | egrep -v '^\w' | awk '{print $1}' | tr -d ',' | egrep -v '\--|^\[|^cf$|CF_|HTTP' | egrep '^[a-z]')
 fi
 
 ######################### Util functions ##########################
