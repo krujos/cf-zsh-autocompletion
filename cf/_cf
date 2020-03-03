@@ -74,7 +74,7 @@ compadd_service_keys() {
 } 
 compadd_help_flags() { 
 	cmd=$words[2]
-	compadd - $(CF_COLOR=FALSE cf $cmd --help | awk "/OPTIONS/{a=1;next;}a" | awk '{print $1}')
+	compadd - $(CF_COLOR=FALSE cf $cmd --help | awk "/OPTIONS/,/n/" | awk "/OPTIONS/{a=1;next;}a" | awk '{print $1}')
 }
 
 compadd_message() { 
@@ -160,7 +160,7 @@ find_command_flags() {
 				*) command_complete
 			esac
 			;;
-		"delete" | "app" ) #A positional with or without flags
+		"delete" | "app" | "logs") #A positional with or without flags
 			case ${#words} in
 				3) compadd_apps;;
 				*) compadd_help_flags;;
